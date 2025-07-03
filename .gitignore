@@ -1,0 +1,57 @@
+# Binaries for programs and plugins
+simple
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Go workspace file
+go.work
+
+# Build directory
+build/
+dist/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+
+# Configuration files (may contain sensitive data)
+config.yaml
+.simple/config.yaml
+
+# Coverage files
+coverage.out
+coverage.html
+
+# Temporary files
+tmp/
+temp/
+
+
+AGENT.md
+CONFIGURE_COMMAND.md
+IMPLEMENTATION_SUMMARY.md
+UI_ARCHITECTURE.md

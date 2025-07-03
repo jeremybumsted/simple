@@ -1,0 +1,6 @@
+services:
+  golangci-lint:
+    image: golangci/golangci-lint:v2.0.2
+    working_dir: /app
+    volumes:
+      - ../:/app

@@ -1,0 +1,28 @@
+# Example configuration for Simple CLI
+# Copy this file to ~/.simple/config.yaml and customize as needed
+# Or run: simple configure
+
+# Plain API configuration
+plain:
+  # Your Plain API key (required)
+  # Get this from your Plain workspace settings → API Keys
+  # You can also set this via PLAIN_API_KEY environment variable
+  api_key: "your-api-key-here"
+
+  # Plain API endpoint (usually no need to change this)
+  endpoint: "https://core-api.uk.plain.com/graphql/v1"
+
+  # Your workspace ID (optional)
+  # Can also be set via PLAIN_WORKSPACE_ID environment variable
+  workspace_id: "your-workspace-id-here"
+
+# UI configuration
+ui:
+  # Theme for the terminal UI
+  theme: "default"
+
+  # Number of items to show per page in lists
+  page_size: 20
+
+  # Show debug information (for troubleshooting)
+  show_debug: false
