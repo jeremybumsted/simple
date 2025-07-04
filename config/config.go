@@ -28,6 +28,12 @@ type UIConfig struct {
 	ShowDebug bool   `yaml:"show_debug" kong:"default:false"`
 }
 
+// DBConfig contains database configuration. Currently only SQLite is supported.
+type DBConfig struct {
+	Driver string `yaml:"driver" kong:"default:sqlite" kong:"env:SIMPLE_DB_DRIVER"`
+	Source string `yaml:"source" kong:"default:sqlite.db" kong:"env:SIMPLE_DB_SOURCE"`
+}
+
 // Validate validates the configuration
 func (c *Config) Validate() error {
 	if c.Plain.APIKey == "" {

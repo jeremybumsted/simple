@@ -19,9 +19,8 @@ var CLI struct {
 	Configure cmd.ConfigureCmd `cmd:"" help:"Create default configuration file"`
 
 	// API Commands
-	Customers cmd.CustomersCmd `cmd:"" help:"Manage customers"`
-	Threads   cmd.ThreadsCmd   `cmd:"" help:"Manage threads"`
-	Report    cmd.ReportCmd    `cmd:"" help:"Generate a report of threads"`
+	Threads cmd.ThreadsCmd `cmd:"" help:"Manage threads"`
+	Report  cmd.ReportCmd  `cmd:"" help:"Generate a report of threads"`
 }
 
 func main() {

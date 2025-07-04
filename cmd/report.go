@@ -10,13 +10,15 @@ import (
 
 	"simple/client"
 	"simple/config"
+	"simple/store"
 	"simple/types"
 )
 
 // ReportCmd represents the report command.
 type ReportCmd struct {
-	Range   string `arg:"" enum:"1d,7d,30d,60d" placeholder:"7d" default:"1d" help:"Generate a report of threads for a time range, accepts [1d, 7d,30d]"`
-	Summary bool   `help:"Display only the summary of the report"`
+	Range    string `arg:"" enum:"1d,7d,30d,60d" placeholder:"7d" default:"1d" help:"Generate a report of threads for a time range, accepts [1d, 7d,30d]"`
+	Summary  bool   `help:"Display only the summary of the report"`
+	Database string `arg:"" enum:"sqlite,postgres" short:"d" default:"sqlite" help:"Database to use for storing data"`
 }
 
 // Run executes the report command.
@@ -82,6 +84,75 @@ func (r *ReportCmd) Run(cfg *config.Config) error {
 		fmt.Printf("\n=== Summary ===\n")
 		r.displaySummary(threads)
 		return nil
+	}
+
+	// Lets write to the database now
+	//
+	switch r.Database {
+	case "sqlite":
+		// TODO move this to config
+		db, err := store.SQLiteInitDB(os.Getenv("SQLITE_DB_PATH"))
+		if err != nil {
+			return fmt.Errorf("failed to initialize database: %w", err)
+		}
+
+		var threadReports []*store.Threads
+		for _, edge := range threads.Edges {
+			if edge.Node == nil {
+				continue
+			}
+			threadReport := store.SQLiteFromThread(edge.Node)
+			threadReports = append(threadReports, threadReport)
+		}
+
+		if err := store.SQLiteSaveThreads(db, threadReports); err != nil {
+			return fmt.Errorf("failed to write threads to database: %w", err)
+		}
+	case "postgres":
+
+		//TODO: move this to config
+		db, err := store.PostgresInitDB(store.PostgresConfig{
+			Host:     "localhost",
+			Port:     5432,
+			User:     "postgres",
+			Password: "password",
+			DBName:   "postgres",
+			SSLMode:  "disable",
+		})
+		if err != nil {
+			return fmt.Errorf("failed to initialize database: %w", err)
+		}
+
+		var threadReports []*store.Threads
+		for _, edge := range threads.Edges {
+			if edge.Node == nil {
+				continue
+			}
+			threadReport := store.PostgresFromThread(edge.Node)
+			threadReports = append(threadReports, threadReport)
+		}
+
+		if err := store.PostgresSaveThreads(db, threadReports); err != nil {
+			return fmt.Errorf("failed to write threads to database: %w", err)
+		}
+	}
+
+	db, err := store.SQLiteInitDB("/Users/jeremy/dev/tools/metabase/sqlite-data/plain.db")
+	if err != nil {
+		return fmt.Errorf("failed to initialize database: %w", err)
+	}
+
+	var threadReports []*store.Threads
+	for _, edge := range threads.Edges {
+		if edge.Node == nil {
+			continue
+		}
+		threadReport := store.SQLiteFromThread(edge.Node)
+		threadReports = append(threadReports, threadReport)
+	}
+
+	if err := store.SQLiteSaveThreads(db, threadReports); err != nil {
+		return fmt.Errorf("failed to write threads to database: %w", err)
 	}
 
 	// Display the report.
